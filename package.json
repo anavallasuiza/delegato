@@ -4,9 +4,15 @@
   "description": "Easily add jquery actions directly from the html",
   "version": "0.1.0",
   "homepage": "https://github.com/MiniPlugins/delegato",
-  "author": [
-    "Óscar Otero <oom@oscarotero.com>",
-    "Berto Yáñez <berto@ber.to>"
+  "author": {
+    "name": "Berto Yáñez",
+    "email": "berto@ber.to"
+  },
+  "contributors": [
+    {
+      "name": "Óscar Otero",
+      "email": "oom@oscarotero.com"
+    }
   ],
   "repository": {
     "type": "git",

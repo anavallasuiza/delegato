@@ -1,6 +1,7 @@
 /*! Delegato - v0.1.0 - 2015-01-22
 * https://github.com/MiniPlugins/delegato
-* Copyright (c) 2015 ; Licensed MIT */
+* Copyright (c) 2015 Berto Yáñez; Licensed MIT */
+
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
     // Existe AMD.
