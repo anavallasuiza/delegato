@@ -1,4 +1,4 @@
-/*! Delegato - v0.1.0 - 2015-01-22
+/*! Delegato - v0.2.0 - 2015-01-22
 * https://github.com/MiniPlugins/delegato
 * Copyright (c) 2015 Berto Yáñez, Óscar Otero; Licensed MIT */
 
@@ -13,12 +13,12 @@
 }(function () {
 
     (function ($, window, document, undefined) {
-        var pluginName = "emissary",
+        var pluginName = "delegato",
             defaults = {
                 includeJquery: false
             };
 
-        function Emissary (element, options) {
+        function Delegato (element, options) {
             this.element = element;
             this.settings = $.extend({}, defaults, options);
 
@@ -29,7 +29,7 @@
             this.init();
         }
 
-        Emissary.prototype = {
+        Delegato.prototype = {
             init: function () {
                 var availableActions = this.actions;
                 var actionPattern = this.pattern;
@@ -62,8 +62,7 @@
                                 throw new Error('Invalid selector');
                             }
 
-
-                            if(availableActions[command]) {
+                            if($.isFunction(availableActions[command])) {
                                 availableActions[command].apply($(selector), args);
                             } else if (includeJquery && $.isFunction($(selector)[command])) {
                                 $(selector)[command].apply($(selector), args);
@@ -73,9 +72,7 @@
                         }
                     });
 
-
                     e.preventDefault();
-
                 });
             },
             register: function(name, func) {
@@ -92,7 +89,7 @@
             if ((options === undefined) || (typeof options === 'object')) {
                 return this.each(function () {
                     if (!$.data(this, "plugin_" + pluginName)) {
-                        $.data(this, "plugin_" + pluginName, new Emissary(this, options));
+                        $.data(this, "plugin_" + pluginName, new Delegato(this, options));
                     }
                 });
             }
@@ -103,7 +100,7 @@
                 this.each(function () {
                     var instance = $.data(this, 'plugin_' + pluginName);
 
-                    if ((instance instanceof Emissary) && (typeof instance[options] === 'function')) {
+                    if ((instance instanceof Delegato) && (typeof instance[options] === 'function')) {
                         returns = instance[options].apply(instance, Array.prototype.slice.call(args, 1));
                     }
 

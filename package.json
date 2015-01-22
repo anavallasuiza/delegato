@@ -1,8 +1,8 @@
 {
   "name": "delegato",
   "title": "Delegato",
-  "description": "Easily add jquery actions directly from the html",
-  "version": "0.1.0",
+  "description": "Easily add jQuery actions directly from the html",
+  "version": "0.2.0",
   "homepage": "https://github.com/MiniPlugins/delegato",
   "author": [{
     "name": "Berto Yáñez",
@@ -13,7 +13,10 @@
       "email": "oom@oscarotero.com"
     }
   ],
-  "contributors": [
+  "contributors": [{
+      "name": "Carlos Morales",
+      "email": "carlos@anavallasuiza.com"
+  }
   ],
   "repository": {
     "type": "git",
@@ -30,7 +33,7 @@
     "node": ">= 0.8.0"
   },
   "dependencies": {
-    "jquery": "*"
+    "jquery": ">=1.8.0"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.10.0",
