@@ -1,8 +1,29 @@
 {
-  "name": "jquery-plugin",
-  "version": "0.0.0-ignored",
+  "name": "delegato",
+  "title": "Delegato",
+  "description": "Easily add jquery actions directly from the html",
+  "version": "0.1.0",
+  "homepage": "https://github.com/MiniPlugins/delegato",
+  "author": [
+    "Óscar Otero <oom@oscarotero.com>",
+    "Berto Yáñez <berto@ber.to>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:MiniPlugins/delegato.git"
+  },
+  "bugs": "https://github.com/MiniPlugins/delegato/issues",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/MiniPlugins/delegato/blob/master/LICENSE-MIT"
+    }
+  ],
   "engines": {
     "node": ">= 0.8.0"
+  },
+  "dependencies": {
+    "jquery": "*"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.10.0",
@@ -11,5 +32,6 @@
     "grunt-contrib-watch": "~0.4.0",
     "grunt-contrib-clean": "~0.4.0",
     "grunt": "~0.4.5"
-  }
+  },
+  "keywords": ["jquery", "delegate"]
 }
