@@ -1,13 +1,13 @@
 {
   "name": "delegato",
   "title": "Delegato",
-  "description": "Easily add or remove jquery actions directly from the html",
+  "description": "Easily add jquery actions directly from the html",
   "version": "0.1.0",
   "homepage": "https://github.com/MiniPlugins/delegato",
-  "author": {
-    "name": "Berto Yáñez",
-    "email": "berto@ber.to"
-  },
+  "author": [
+    "Óscar Otero <oom@oscarotero.com>",
+    "Berto Yáñez <berto@ber.to>"
+  ],
   "repository": {
     "type": "git",
     "url": "git@github.com:MiniPlugins/delegato.git"
@@ -22,5 +22,5 @@
   "dependencies": {
     "jquery": "*"
   },
-  "keywords": []
+  "keywords": ["jquery", "delegate"]
 }
