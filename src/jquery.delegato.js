@@ -6,10 +6,6 @@
  * Licensed under the MIT license.
  */
 
-// data-action="(selector)action:parameter1,parameter2,..."
-// Regexp: /\(([^\)]+)\)([^:]+):([^|]+)/
-// pasa a function(selector, parameter1, parameter2, ...)
-
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
     // Existe AMD.
