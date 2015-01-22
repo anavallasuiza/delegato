@@ -6,6 +6,10 @@
  * Licensed under the MIT license.
  */
 
+// data-action="(selector)action:parameter1,parameter2,..."
+// Regexp: /\(([^\)]+)\)([^:]+):([^|]+)/
+// pasa a function(selector, parameter1, parameter2, ...)
+
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
     // Existe AMD.
@@ -17,11 +21,16 @@
 }(function () {
 
     (function ($, window, document, undefined) {
-        var pluginName = "emissary", defaults = {};
+        var pluginName = "emissary",
+            defaults = {
+                includeJquery: false
+            };
 
         function Emissary (element, options) {
             this.element = element;
             this.settings = $.extend({}, defaults, options);
+
+            this.pattern = /\(([^\)]+)\)([^:|]+):?([^|]+)?/;
 
             this.actions = {};
 
@@ -30,76 +39,51 @@
 
         Emissary.prototype = {
             init: function () {
-                var actions = this.actions;
+                var availableActions = this.actions;
+                var actionPattern = this.pattern;
+                var includeJquery = this.settings.includeJquery;
 
                 $(this.element).on('click', '[data-action]', function (e) {
-
                     var $this = $(this);
 
-                    var action = $this.data('action');
+                    var actions = $this.data('action');
 
-                    if ($this.is('input')) {
-                        if (action === 'toggleClass') {
-                            action = $this.is(':checked') ? 'addClass' : 'removeClass';
-                        } else if (action === 'toggle') {
-                            action = $this.is(':checked') ? 'show' : 'hide';
+                    var isValidSelector = function(selector) {
+                        var $element;
+                        try {
+                            $element = $(selector);
+                        } catch(e) {
+                            return false;
                         }
-                    } else {
-                        e.preventDefault();
-                    }
+                        return $element;
+                    };
 
-                    var dataTarget = $this.data('target') || $this.attr('href');
+                    actions.split('|').forEach(function(action) {
+                        var parts = action.match(actionPattern);
 
-                    var multipleTargets = dataTarget.split('|');
+                        if(parts) {
+                            var selector = parts[1];
+                            var command = parts[2];
+                            var args = parts[3] ? parts[3].split(',') : [];
 
-                    var targets = multipleTargets.map(function(target) {
-
-                        var isValidSelector = function(selector) {
-                            var $element;
-                            try {
-                                $element = $(selector);
-                            } catch(e) {
-                                return false;
+                            if(!isValidSelector(selector)) {
+                                throw new Error('Invalid selector');
                             }
-                            return $element;
-                        };
 
-                        if (!target) {
-                            target = $this;
-                        } else if (target === 'parent') {
-                            target = $this.parent();
-                        } else if (target === 'parent-next') {
-                            target = $this.parent().next();
-                        } else if (target === 'next') {
-                            target = $this.next();
-                        } else {
-                            var $target = isValidSelector(target);
-                            if($target.length) {
-                                target = $target;
+
+                            if(availableActions[command]) {
+                                availableActions[command].apply($(selector), args);
+                            } else if (includeJquery && $.isFunction($(selector)[command])) {
+                                $(selector)[command].apply($(selector), args);
+                            } else {
+                                throw new Error('Malformed action');
                             }
                         }
-
-                        return target === 'null' ? null : target;
                     });
 
-                    $.each(action.split('|'), function (index, name) {
 
-                        var command = name.split(':');
-                        var currentAction = command.shift();
-                        var currentTarget = targets[0];
+                    e.preventDefault();
 
-                        if(targets.length > 1) {
-                            currentTarget = targets[index] ? targets[index] : targets[0];
-                        }
-
-                        command.unshift(currentTarget);
-
-                        if(actions[currentAction]) {
-                            actions[currentAction].apply($this, command);
-                        } else {
-                            throw new Error('Action not registered');
-                        }
-                    });
                 });
             },
             register: function(name, func) {
@@ -140,15 +124,6 @@
             }
         };
 
-        var globalInstance;
-
-        $[pluginName] = function () {
-            if (!globalInstance) {
-                globalInstance = $('body');
-            }
-
-            return $.fn[pluginName].apply(globalInstance, Array.prototype.slice.call(arguments, 0));
-        };
     })(jQuery, window, document);
 
 }));
