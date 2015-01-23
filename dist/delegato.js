@@ -1,13 +1,11 @@
-/*! Delegato - v0.2.0 - 2015-01-23
+/*! Delegato - v0.5.0 - 2015-01-23
 * https://github.com/MiniPlugins/delegato
 * Copyright (c) 2015 Berto Yáñez, Óscar Otero; Licensed MIT */
 
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
-    // Existe AMD.
     define(['jquery'], factory);
 } else {
-    // Non existe, busca en global
     factory(jQuery);
 }
 }(function () {
@@ -51,30 +49,70 @@
                         return $element;
                     };
 
+                    var parseTarget = function(target) {
+                        var selectorParts = target.match(/^([^@]+)(?:@(.*))?$/);
+
+                        var selectorTarget = selectorParts[1];
+                        var selectorModifier = selectorParts[2];
+
+                        if(!selectorTarget) {
+                            throw new Error('Invalid selector');
+                        }
+
+                        var $parsedSelector;
+
+                        switch(selectorTarget) {
+                            case 'this':
+                                $parsedSelector = $this;
+                                break;
+                            case 'parent':
+                                $parsedSelector = $this.parent();
+                                break;
+                            case 'next':
+                                $parsedSelector = $this.next();
+                                break;
+                            case 'prev':
+                                $parsedSelector = $this.prev();
+                                break;
+                            case 'parent-next':
+                                $parsedSelector = $this.parent().next();
+                                break;
+                            case 'parent-prev':
+                                $parsedSelector = $this.parent().prev();
+                                break;
+                            default:
+                                $parsedSelector = isValidSelector(selectorTarget);
+                                break;
+                        }
+
+                        if(!$parsedSelector) {
+                            throw new Error('Invalid selector');
+                        }
+
+                        return selectorModifier ? $parsedSelector.find(selectorModifier) : $parsedSelector;
+                    };
+
                     actions.split('|').forEach(function(action) {
                         var parts = action.match(actionPattern);
 
                         if(parts) {
-                            console.log(parts);
                             var selector = parts[1] ? parts[1] : globalTarget;
                             var command = parts[2];
                             var args = parts[3] ? parts[3].split(',') : [];
 
-                            if(!isValidSelector(selector)) {
-                                throw new Error('Invalid selector');
-                            }
+                            var $selector = parseTarget(selector);
 
                             if($.isFunction(availableActions[command])) {
-                                availableActions[command].apply($(selector), args);
-                            } else if (includeJquery && $.isFunction($(selector)[command])) {
-                                console.log($(selector), command, args);
-                                $(selector)[command].apply($(selector), args);
+                                availableActions[command].apply($selector, args);
+                            } else if (includeJquery && $.isFunction($selector[command])) {
+                                $selector[command].apply($selector, args);
                             } else {
                                 throw new Error('Malformed action');
                             }
                         }
                     });
 
+                    e.stopPropagation();
                     e.preventDefault();
                 });
             },
