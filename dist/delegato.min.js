@@ -1,4 +1,4 @@
-/*! Delegato - v0.2.0 - 2015-01-22
+/*! Delegato - v0.2.0 - 2015-01-23
 * https://github.com/MiniPlugins/delegato
 * Copyright (c) 2015 Berto Yáñez, Óscar Otero; Licensed MIT */
 

@@ -55,6 +55,22 @@ module.exports = function(grunt) {
         tasks: ['jshint:src']
       },
     },
+    update_json: {
+        options: {
+          indent: ' '
+        },
+        bower: {
+          src: 'package.json',
+          dest: 'bower.json',
+          fields: {
+            'name': null,
+            'version': null,
+            'description': null,
+            'repository': null,
+            'authors': 'author'
+          }
+        },
+    }
   });
 
   // These plugins provide necessary tasks.
@@ -63,8 +79,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-update-json');
 
   // Default task.
-  grunt.registerTask('default', ['jshint', 'clean', 'concat', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'clean', 'concat', 'uglify', 'update_json:bower']);
 
 };
