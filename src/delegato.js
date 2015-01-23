@@ -5,7 +5,6 @@
  * Copyright (c) 2015 Berto Yáñez
  * Licensed under the MIT license.
  */
-
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
     // Existe AMD.
@@ -26,7 +25,7 @@
             this.element = element;
             this.settings = $.extend({}, defaults, options);
 
-            this.pattern = /\(([^\)]+)\)([^:|]+):?([^|]+)?/;
+            this.pattern = /(?:\(([^\)]+)\))?([^:|]+):?([^|]+)?/;
 
             this.actions = {};
 
@@ -43,6 +42,7 @@
                     var $this = $(this);
 
                     var actions = $this.data('action');
+                    var globalTarget = $this.data('target') || $this.attr('href');
 
                     var isValidSelector = function(selector) {
                         var $element;
@@ -58,7 +58,8 @@
                         var parts = action.match(actionPattern);
 
                         if(parts) {
-                            var selector = parts[1];
+                            console.log(parts);
+                            var selector = parts[1] ? parts[1] : globalTarget;
                             var command = parts[2];
                             var args = parts[3] ? parts[3].split(',') : [];
 

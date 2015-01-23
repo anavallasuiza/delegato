@@ -22,7 +22,7 @@
             this.element = element;
             this.settings = $.extend({}, defaults, options);
 
-            this.pattern = /\(([^\)]+)\)([^:|]+):?([^|]+)?/;
+            this.pattern = /(?:\(([^\)]+)\))?([^:|]+):?([^|]+)?/;
 
             this.actions = {};
 
@@ -39,6 +39,7 @@
                     var $this = $(this);
 
                     var actions = $this.data('action');
+                    var globalTarget = $this.data('target') || $this.attr('href');
 
                     var isValidSelector = function(selector) {
                         var $element;
@@ -54,7 +55,8 @@
                         var parts = action.match(actionPattern);
 
                         if(parts) {
-                            var selector = parts[1];
+                            console.log(parts);
+                            var selector = parts[1] ? parts[1] : globalTarget;
                             var command = parts[2];
                             var args = parts[3] ? parts[3].split(',') : [];
 
@@ -65,6 +67,7 @@
                             if($.isFunction(availableActions[command])) {
                                 availableActions[command].apply($(selector), args);
                             } else if (includeJquery && $.isFunction($(selector)[command])) {
+                                console.log($(selector), command, args);
                                 $(selector)[command].apply($(selector), args);
                             } else {
                                 throw new Error('Malformed action');
