@@ -148,7 +148,7 @@ You can define multiple params, without spaces:
 
 ### Multiple actions
 
-To chain actions use the pipe character (|):
+To chain actions use a vertical bar (pipe):
 
 `<button data-action="actionA:param|actionB" data-target=".foo">`
 
