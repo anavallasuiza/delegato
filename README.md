@@ -4,18 +4,32 @@ Easily execute any javascript action directly from the html.
 
 ##Basic example
 
+Clicking the button will scroll the page to the #foo div.
+
+
 ```html
-<button data-action="css:background,red" data-target="#foo">Click me!</button>
+<button data-action="scroll:fast" data-target="#foo">Scroll to #foo!</button>
+
+<!-- more html elements -->
 
 <div id="foo">lorem ipsum</div>
 ```
 
-Clicking the button will change the `<div>` hackground to red.
+```js
+$('body').delegato();
 
+$('body').delegato('register', 'scroll', function(e, speed) {
+    // this is a jquery object with data-target value $('#foo')
+    return $('html, body').animate({
+        scrollTop: this.offset().top - 120
+    }, speed);
+});
+
+```
 
 # Install
 
-You can download delegato from this repo or install via bower:
+You can download delegato from this repo or install it via bower:
 
 `bower install delegato --save`
 
@@ -25,7 +39,7 @@ Add dist/delegato.min.js to your code:
 
 `<script src="path/to/delegato/dist/delegato.min.js"></script>`
 
-Delegato depends only on jQuery, make sure jQuery is available before loading it.
+Delegato only depends on jQuery. Make sure jQuery is available before loading it.
 
 ### Require.js
 
@@ -72,7 +86,7 @@ This is how you create an basic action:
 
 We are using two custom data attributes:
 
-1. __data-action__: to define the javascript action(s) to execute and its params. In this case the action name is _actionName_ and we define two params: _hello_ and _3_
+1. __data-action__: to define the javascript action(s) to be executed and its params. In this case the action name is _actionName_ and we define two params: _hello_ and _3_
 2. __data-target__: to define the target element
 
 **JS code:**
@@ -82,13 +96,13 @@ We are using two custom data attributes:
 //Init delegato
 $('body').delegato();
 
-//Register action
+//Register the action
 $('body').delegato('register', 'actionName', function(event, paramA, paramB) {
     // Available variables:
-    // this: the target element (a jQuery object)
+    // this: the jquery object of the target element ($('.foo'))
     // event: the click event object that generated this acction
-    // paramA: the first param
-    // paramA: the second param
+    // paramA: the first param (hello)
+    // paramA: the second param (3)
 });
 ```
 
@@ -103,6 +117,16 @@ To use the jQuery API:
 ```html
     <button data-action="css:background,red" data-target=".foo">text</button>
     <span class="foo">lorem ipsum</span>
+```
+
+**JS code:**
+
+```js
+
+//Init delegato
+$('body').delegato({
+    includeJquery: true
+});
 ```
 
 This action will call the .css() jQuery method. It is equivalent to: `$('.foo').css('background', 'red');`.
@@ -162,3 +186,6 @@ In this example we are chaining to actions:
 1. actionA will have as target the elements with class .inline children of the next element of the clicked buttton.
 2. actionB will have as target the strong elements children of the element with the id _foo_.
 
+### Params
+
+All the params are processed as strings so (for now) you can only use strings as params. Make sure to do the necessary transformations in your custom actions if you need any other type of param.
