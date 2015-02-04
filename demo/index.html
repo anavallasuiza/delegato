@@ -2,9 +2,16 @@
 <html>
 <head>
     <title>Delegato</title>
+
+    <style type="text/css" media="screen">
+        #baz {
+            margin-bottom: 1500px;
+        }
+    </style>
 </head>
 <body>
-<button data-action="(next@.inline)css:background,red|css:color,yellow|(#bar)slideToggle|(#baz)toggle" data-target="#foo">Click</button>
+<button data-action="scroll:slow" data-target="#qux">Scroll!</button>
+<button data-action="(#foo@.inline)css:background,red|css:color,yellow|(#bar)slideToggle|(#baz)toggle" data-target="#foo">Click</button>
 
 <div id="foo">
     Lorem <span class="inline">ipsum dolor sit amet</span>, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -18,6 +25,9 @@
     <h1>This is a title</h1>
 </div>
 
+
+<div id="qux">hello!</div>
+
 <script src="jquery.js" type="text/javascript" charset="utf-8"></script>
 
 <script src="../src/delegato.js" type="text/javascript" charset="utf-8"></script>
@@ -25,9 +35,24 @@
 <script type="text/javascript" charset="utf-8">
         /*global $*/
 
-        $('body').delegato({
+        var $body = $('body');
+
+        $body.delegato({
             includeJquery: true
         });
+
+        /**
+        * Custom action
+        */
+
+        $body.delegato('register', 'scroll', function(event, speed) {
+            speed = speed || 400;
+            return $('html, body').animate({
+                scrollTop: this.offset().top - 120
+            }, speed);
+        });
+
+
 
 </script>
 </body>

@@ -108,6 +108,7 @@
                             var $selector = parseTarget($this, selector);
 
                             if($.isFunction(availableActions[command])) {
+                                args.unshift(e);
                                 availableActions[command].apply($selector, args);
                             } else if (includeJquery && $.isFunction($selector[command])) {
                                 $selector[command].apply($selector, args);

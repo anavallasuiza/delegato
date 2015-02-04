@@ -1,4 +1,4 @@
-/*! Delegato - v0.5.1 - 2015-01-23
+/*! Delegato - v1.0.0 - 2015-02-04
 * https://github.com/MiniPlugins/delegato
 * Copyright (c) 2015 Berto Yáñez, Óscar Otero; Licensed MIT */
 
@@ -105,6 +105,7 @@
                             var $selector = parseTarget($this, selector);
 
                             if($.isFunction(availableActions[command])) {
+                                args.unshift(e);
                                 availableActions[command].apply($selector, args);
                             } else if (includeJquery && $.isFunction($selector[command])) {
                                 $selector[command].apply($selector, args);

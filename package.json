@@ -2,7 +2,7 @@
     "name": "delegato",
     "title": "Delegato",
     "description": "Easily add jQuery actions directly from the html",
-    "version": "0.5.1",
+    "version": "1.0.0",
     "homepage": "https://github.com/MiniPlugins/delegato",
     "author": [
         {
