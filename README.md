@@ -1,6 +1,6 @@
 # Delegato
 
-Easily execute any javascript action directly from the html.
+jQuery plugin to easily execute any javascript action directly from the html.
 
 ##Basic example
 
@@ -33,17 +33,20 @@ You can download delegato from this repo or install it via bower:
 
 `bower install delegato --save`
 
-## Include files
+Then, import the jquery and delegato scripts into your html code and initialize the plugin:
 
-Add dist/delegato.min.js to your code:
+```html
+<script src="path/to/jquery.min.js"></script>
+<script src="path/to/delegato/dist/delegato.min.js"></script>
 
-`<script src="path/to/delegato/dist/delegato.min.js"></script>`
+<script type="text/javascript">
+    $('body').delegato();
+</script>
+```
 
-Delegato only depends on jQuery. Make sure jQuery is available before loading it.
+## AMD support
 
-### Require.js
-
-Delegato is also compatible with RequireJS:
+Delegato is also compatible with AMD, for example, RequireJS:
 
 ```js
 require.config({
@@ -51,129 +54,121 @@ require.config({
         'delegato': 'path/to/delegato/dist/delegato.min'
     }
 });
-
 ...
 
 require(['jquery', 'delegato'], function($) {
+    
+    //Init the plugin
     $('body').delegato();
-    //...
+
 });
 ```
 
-# Initialize
+# How it works?
 
-After delegato is available you need to initialize it, for example:
-
-```
-$('body').delegato();
-```
-
-You can use any jQuery selector and delegato will only affect the children elements of that selector.
-
-
-# Register actions
-
-After delegato is initialized you must register at least one action.
-
-This is how you create an basic action:
-
-**HTML code:**
+Delegato attachs handlers to the click event for all elements containing the `data-action` attribute. Let's take this example of basic interaction:
 
 ```html
-    <button data-action="actionName:hello,3" data-target=".foo">text</button>
-    <span class="foo">lorem ipsum</span>
+<a id="content-btn" href="#content">See the content</a>
+
+<div id="content" class="hidden">
+This is the hidden content. On click in the link above, the content should be showed.
+</div>
+
+<script type="text/javascript">
+    $('#content-btn').on('click', function (e) {
+        e.preventDefault();
+
+        var target = $(this).attr('href');
+
+        $(target).slideDown('slow');
+    });
+</script>
 ```
 
-We are using two custom data attributes:
-
-1. __data-action__: to define the javascript action(s) to be executed and its params. In this case the action name is _actionName_ and we define two params: _hello_ and _3_
-2. __data-target__: to define the target element
-
-**JS code:**
-
-```js
-
-//Init delegato
-$('body').delegato();
-
-//Register the action
-$('body').delegato('register', 'actionName', function(event, paramA, paramB) {
-    // Available variables:
-    // this: the jquery object of the target element ($('.foo'))
-    // event: the click event object that generated this acction
-    // paramA: the first param (hello)
-    // paramA: the second param (3)
-});
-```
-
-# jQuery actions fallback
-
-There is a way to use delegato without defining any action: using delegato as a proxy to a subset of the jQuery API. This option is limited and buggy so you should use it only if you know what you are doing.
-
-To use the jQuery API:
-
-**HTML code:**
+With delegato, this can be done just with html:
 
 ```html
-    <button data-action="css:background,red" data-target=".foo">text</button>
-    <span class="foo">lorem ipsum</span>
+<a id="content-btn" data-action="slideDown:slow" href="#content">See the content</a>
+
+<div id="content" class="hidden">
+This is the hidden content. On click in the link above, the content should be showed.
+</div>
 ```
 
-**JS code:**
+Delegato register the click event in all elements with the `data-action` attribute and execute the callbacks defined there.
+
+## Targets:
+
+The target is the element that receive the actions and it's get from the `href` or `data-target` atributes of the clicked element. It can be a valid css selector but there are some special keywords for targets relative to the clicked element:
+
+**this** | the clicked element itself
+**parent** | The target is the parent
+**next** | The target is the next sibling
+**prev** | The target is the previous sibling
+**parent-next** | The target is the next sibling of the parent.
+**parent-prev** | The target is the previous sibling of the parent.
+
+
+## Register actions
+
+The examples above shows jquery functions. This is because delegato can register automatically these functions for you. There are a bunch of them: show, hide, slideDown, fadeIn, .... Refer to the jQuery docs to know more. But you can register also your own functions.
 
 ```js
 
 //Init delegato
 $('body').delegato({
-    includeJquery: true
+    includeJquery: true //register the jquery functions
+});
+
+//Register a new action
+$('body').delegato('register', 'actionName', function(event, paramA, paramB) {
+    // Available variables:
+    // this: the jquery object of the target element ($('.foo'))
+    // event: the click event object that generated this action
+    // paramA: the first param (hello)
+    // paramA: the second param (3)
 });
 ```
 
-This action will call the .css() jQuery method. It is equivalent to: `$('.foo').css('background', 'red');`.
+Now you can execute this functions from your html code:
 
-The main limitation is you can only use jQuery methods that take no arguments or only string based arguments. There are a bunch of them: show, hide, slideDown, fadeIn, .... Refer to the jQuery docs to know more.
+```html
+<button data-action="actionName:hello,3" data-target=".foo">text</button>
+<span class="foo">lorem ipsum</span>
+```
 
-
-# Basic usage
-
-### Defining actions
+# Examples
 
 Basic action syntax:
 
-`<button data-action="actionName:param">`
+```html
+<button data-action="actionName:param">
+```
 
 You can define multiple params, without spaces:
 
-`<button data-action="actionName:param1,param2,param3">`
+```html
+<button data-action="actionName:param1,param2,param3">
+```
 
-### Multiple actions
+Multiple actions. To chain actions use a vertical bar (pipe):
 
-To chain actions use a vertical bar (pipe):
+```html
+<button data-action="actionA:param|actionB" data-target=".foo">
+```
 
-`<button data-action="actionA:param|actionB" data-target=".foo">`
-
-### Default target and per-action targets
-
-The selector defined in _data-target_ will be used as target for each action unless you define a custom action target.
+The selector defined in `data-target` will be used as target for each action unless you define a custom action target.
 
 Syntax: `(optional-target)actionName:params,...`
 
-`<button data-action="actionA:param|(.bar)actionB" data-target=".foo">`
+```html
+<button data-action="actionA:param|(.bar)actionB" data-target=".foo">
+```
 
-In this case the target of _actionA_ will be _.foo_ and the target of actionB will be _.bar_
+In this case the target of _actionA_ will be `.foo` and the target of _actionB_ will be `.bar`
 
-### Target syntax
-
-You must define a target. This target can be any valid html selector in the data-target attribute (or using the per-action syntax). Also you can define targets relative to the clicked element:
-
-- _this_: the clicked element
-- _parent_: the parent of the clicked element
-- _next_: the next element
-- _prev_: the previous element
-- _parent-next_: the parent next element
-- _parent-prev_: the parent previous element
-
-#### Find inside target
+## Find inside target
 
 You can use this syntax to find elements inside target:
 
@@ -187,7 +182,3 @@ In this example we are chaining to actions:
 
 1. actionA will have as target the elements with class .inline children of the next element of the clicked buttton.
 2. actionB will have as target the strong elements children of the element with the id _foo_.
-
-### Params
-
-All the params are processed as strings so (for now) you can only use strings as params. Make sure to do the necessary transformations in your custom actions if you need any other type of param.
