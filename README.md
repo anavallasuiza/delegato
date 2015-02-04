@@ -156,6 +156,8 @@ To chain actions use the pipe character (|):
 
 The selector defined in _data-target_ will be used as target for each action unless you define a custom action target.
 
+Syntax: `(optional-target)actionName:params,...`
+
 `<button data-action="actionA:param|(.bar)actionB" data-target=".foo">`
 
 In this case the target of _actionA_ will be _.foo_ and the target of actionB will be _.bar_
