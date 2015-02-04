@@ -19,7 +19,7 @@ Clicking the button will scroll the page to the #foo div.
 $('body').delegato();
 
 $('body').delegato('register', 'scroll', function(e, speed) {
-    // this is a jquery object with data-target value $('#foo')
+    // 'this' is binded to the jQuery object of the button data-target value: $('#foo')
     return $('html, body').animate({
         scrollTop: this.offset().top - 120
     }, speed);
