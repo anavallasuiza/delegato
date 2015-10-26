@@ -1,7 +1,7 @@
 {
-    "name": "delegato",
+    "name": "jquery.delegato",
     "main": "dist/delegato.js",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "homepage": "https://github.com/MiniPlugins/delegato",
     "description": "Easily add jQuery actions directly from the html",
     "dependencies": {
@@ -32,5 +32,5 @@
         ".jshintrc",
         "libs/",
         "Gruntfile.js"
-      ]
+    ]
 }
