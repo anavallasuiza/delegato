@@ -30,6 +30,7 @@
         "node_modules/",
         "demo/",
         ".jshintrc",
-        "libs/"
+        "libs/",
+        "Gruntfile.js"
       ]
 }
