@@ -25,5 +25,11 @@
             "name": "Óscar Otero",
             "email": "oom@oscarotero.com"
         }
-    ]
+    ],
+    "ignore": [
+        "node_modules/",
+        "demo/",
+        ".jshintrc",
+        "libs/"
+      ]
 }
